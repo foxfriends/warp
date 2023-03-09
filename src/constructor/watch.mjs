@@ -1,5 +1,9 @@
 import { warp } from "./warp.mjs";
 
 export function watch(iterable) {
-  return warp(iterable[Symbol.asyncIterator]());
+  if (iterable?.[Symbol.asyncIterator]) {
+    return warp(iterable[Symbol.asyncIterator]());
+  } else {
+    return warp(iterable);
+  }
 }

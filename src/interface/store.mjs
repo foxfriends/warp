@@ -19,9 +19,11 @@ export function store(value) {
     return only(value).pipe(chain(watch(waker)));
   }
 
-  return {
+  const store = {
     set,
     update,
     [Symbol.asyncIterator]: subscribe,
   };
+  store.pipe = (...fns) => fns.reduce((store, fn) => fn(store), store);
+  return store;
 }
