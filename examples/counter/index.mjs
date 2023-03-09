@@ -5,9 +5,9 @@ function App() {
   const clicks = store(0);
 
   return div(
-    div(text("Clicks: "), text(watch(clicks))),
+    div(text`Clicks: ${clicks}`),
     button(
-      text("Click this"),
+      text`Click this`,
       on("click", () => clicks.update((n) => n + 1))
     )
   );

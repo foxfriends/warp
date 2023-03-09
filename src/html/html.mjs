@@ -1,4 +1,5 @@
 import { warp } from "../constructor/warp.mjs";
+import { watch } from "../constructor/watch.mjs";
 import { combineLatest } from "../constructor/combineLatest.mjs";
 import { renderElement } from "./renderElement.mjs";
 
@@ -22,11 +23,13 @@ export function span(...children) {
   return renderElement("span", children);
 }
 
-export async function* text(content) {
+export async function* text(strings, ...content) {
   const node = document.createTextNode("");
-  for await (const text of warp(content)) {
+  for await (const children of combineLatest(content.map(watch))) {
     yield (parent) => {
-      node.textContent = text;
+      node.textContent = strings.reduce(
+        (text, string, i) => `${text}${children[i - 1]}${string}`
+      );
       parent.appendChild(node);
       return () => parent.removeChild(node);
     };
